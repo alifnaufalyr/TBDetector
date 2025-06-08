@@ -18,8 +18,8 @@ COPY backend/ ./
 # Copy built frontend from builder stage
 COPY --from=frontend-builder /frontend/dist ../frontend/dist
 
-# Copy model
-COPY backend/model ./model
+# Copy model files
+COPY backend/model/ ./model/
 
 EXPOSE 3001
 

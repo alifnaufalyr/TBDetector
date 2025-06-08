@@ -20,11 +20,10 @@ let model;
 
 async function loadModel() {
   try {
-    // Create full URL for both production and development
-    const baseUrl = isProduction 
-      ? 'https://tb-detector-production.up.railway.app'
-      : `http://localhost:${port}`;
-    const modelPath = `${baseUrl}/model/model.json`;
+    // In production use a relative path, in development use full URL
+    const modelPath = isProduction
+      ? './model/model.json'  // Use relative path in production
+      : `http://localhost:${port}/model/model.json`;
     console.log('Loading model from:', modelPath);
       
     model = await tf.loadLayersModel(modelPath);
