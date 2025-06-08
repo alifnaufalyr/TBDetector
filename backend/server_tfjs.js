@@ -23,13 +23,11 @@ async function loadModel() {
   try {
     // Ubah path model untuk production
     const modelPath = process.env.NODE_ENV === 'production'
-      ? 'file://' + path.join(__dirname, 'model/model.json')
+      ? '/model/model.json'  
       : `file://${path.resolve(__dirname, 'model', 'model.json')}`;
     
     console.log('Loading model from:', modelPath);
     
-    // Load model dengan tfjs-node
-    const tf = require('@tensorflow/tfjs-node'); 
     model = await tf.loadLayersModel(modelPath);
     console.log('✅ Model loaded successfully');
     return true;
