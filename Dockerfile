@@ -1,6 +1,6 @@
 # Build frontend
 FROM node:20-slim as frontend-builder
-WORKDIR /app
+WORKDIR /frontend
 COPY frontend/package*.json ./
 RUN npm install
 COPY frontend/ ./
@@ -15,12 +15,13 @@ COPY backend/package*.json ./
 RUN npm install
 COPY backend/ ./
 
-# Copy built frontend
-COPY --from=frontend-builder /app/dist ./frontend
+# Copy built frontend from builder stage
+COPY --from=frontend-builder /frontend/dist ../frontend/dist
 
 # Copy model
 COPY backend/model ./model
 
 EXPOSE 3001
 
+ENV NODE_ENV=production
 CMD ["npm", "start"]

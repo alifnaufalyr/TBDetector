@@ -1,16 +1,17 @@
 const express = require('express');
-const tf = require('@tensorflow/tfjs'); // Use regular tfjs
+const tf = require('@tensorflow/tfjs');
 const path = require('path');
 const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 3001;
+const isProduction = process.env.NODE_ENV === 'production';
 
 app.use(cors());
 app.use(express.json());
 
 // Serve frontend static files
-app.use(express.static(path.join(__dirname, '../frontend')));
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 // Serve model files
 app.use('/model', express.static(path.join(__dirname, 'model')));
@@ -19,8 +20,12 @@ let model;
 
 async function loadModel() {
   try {
-    // Load model using HTTP
-    model = await tf.loadLayersModel(`http://localhost:${port}/model/model.json`);
+    // In production, use relative path, in development use localhost
+    const modelPath = isProduction 
+      ? '/model/model.json'
+      : `http://localhost:${port}/model/model.json`;
+      
+    model = await tf.loadLayersModel(modelPath);
     console.log('✅ Model loaded successfully');
     return true;
   } catch (err) {
@@ -67,10 +72,10 @@ app.post('/predict', async (req, res) => {
 
 // Handle SPA routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
 app.listen(port, '0.0.0.0', async () => {
-  console.log(`🚀 Express backend running on port ${port}`);
+  console.log(`🚀 Express backend running in ${isProduction ? 'production' : 'development'} mode on port ${port}`);
   await loadModel();
 });
