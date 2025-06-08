@@ -5,7 +5,7 @@ const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 3001;
-const isProduction = process.env.NODE_ENV === 'production';
+const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
 
 app.use(cors());
 app.use(express.json());
@@ -20,10 +20,15 @@ let model;
 
 async function loadModel() {
   try {
-    // Always use absolute path with file:// protocol
-    const modelPath = `file://${path.resolve(__dirname, 'model', 'model.json')}`;
+    // Ubah path model untuk production
+    const modelPath = process.env.NODE_ENV === 'production'
+      ? 'file://' + path.join(__dirname, 'model/model.json')
+      : `file://${path.resolve(__dirname, 'model', 'model.json')}`;
+    
     console.log('Loading model from:', modelPath);
-      
+    
+    // Load model dengan tfjs-node
+    const tf = require('@tensorflow/tfjs-node'); // Tambahkan ini
     model = await tf.loadLayersModel(modelPath);
     console.log('✅ Model loaded successfully');
     return true;
@@ -74,7 +79,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
-app.listen(port, '0.0.0.0', async () => {
-  console.log(`🚀 Express backend running in ${isProduction ? 'production' : 'development'} mode on port ${port}`);
+app.listen(port, host, async () => {
+  console.log(`🚀 Express backend running in ${process.env.NODE_ENV} mode on ${host}:${port}`);
   await loadModel();
 });
