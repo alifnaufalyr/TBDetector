@@ -2,6 +2,7 @@ const express = require('express');
 const tf = require('@tensorflow/tfjs');
 const path = require('path');
 const cors = require('cors');
+const db = require('./db');  
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -28,7 +29,7 @@ async function loadModel() {
     console.log('Loading model from:', modelPath);
     
     // Load model dengan tfjs-node
-    const tf = require('@tensorflow/tfjs-node'); // Tambahkan ini
+    const tf = require('@tensorflow/tfjs-node'); 
     model = await tf.loadLayersModel(modelPath);
     console.log('✅ Model loaded successfully');
     return true;
@@ -64,10 +65,21 @@ app.post('/predict', async (req, res) => {
     tensor.dispose();
     prediction.dispose();
     
-    res.json({
+    // Simpan hasil prediksi ke database
+    const predictionResult = {
       prediction: result > 0.5 ? "Ya" : "Tidak",
       probability: result
-    });
+    };
+    
+    db.run(
+      'INSERT INTO history (input, result) VALUES (?, ?)',
+      [JSON.stringify(input), JSON.stringify(predictionResult)],
+      (err) => {
+        if (err) console.error('Database error:', err);
+      }
+    );
+
+    res.json(predictionResult);
   } catch (err) {
     console.error('Prediction error:', err);
     res.status(500).json({ error: err.message });
