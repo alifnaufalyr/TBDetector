@@ -20,10 +20,8 @@ let model;
 
 async function loadModel() {
   try {
-    // In production use a relative path, in development use full URL
-    const modelPath = isProduction
-      ? './model/model.json'  // Use relative path in production
-      : `http://localhost:${port}/model/model.json`;
+    // Always use absolute path with file:// protocol
+    const modelPath = `file://${path.resolve(__dirname, 'model', 'model.json')}`;
     console.log('Loading model from:', modelPath);
       
     model = await tf.loadLayersModel(modelPath);

@@ -21,6 +21,9 @@ COPY --from=frontend-builder /frontend/dist ../frontend/dist
 # Copy model files
 COPY backend/model/ ./model/
 
+# Ensure model directory exists and has correct permissions
+RUN chmod -R 755 ./model/
+
 EXPOSE 3001
 
 ENV NODE_ENV=production
