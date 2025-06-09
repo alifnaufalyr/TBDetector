@@ -1,5 +1,5 @@
-# Use Node.js 16 with Debian Slim as base
-FROM node:16-slim
+# Use Node.js 18 with Debian Slim as base
+FROM node:18-slim
 
 # Install required dependencies for tfjs-node
 RUN apt-get update && \
