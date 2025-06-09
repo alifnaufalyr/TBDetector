@@ -25,11 +25,14 @@ let model;
 
 async function loadModel() {
   try {
-    // In production, use local file path since we're serving it via express static
-    const modelPath = process.env.NODE_ENV === 'production'
-      ? '/backend/model/model.json'  // Changed this line
-      : 'http://localhost:3001/backend/model/model.json';
-    
+    let modelPath;
+    if (process.env.NODE_ENV === 'production') {
+      // Railway/production: load model from local file system
+      modelPath = 'file://' + path.join(__dirname, 'model', 'model.json');
+    } else {
+      // Development: load model from local server
+      modelPath = 'http://localhost:3001/model/model.json';
+    }
     console.log('Loading model from:', modelPath);
     model = await tf.loadLayersModel(modelPath);
     console.log('✅ Model loaded successfully');
