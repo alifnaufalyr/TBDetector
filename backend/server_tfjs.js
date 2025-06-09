@@ -1,6 +1,5 @@
 const express = require('express');
 const tf = require('@tensorflow/tfjs');
-require('@tensorflow/tfjs-node'); // Tambahkan ini
 const path = require('path');
 const cors = require('cors');
 const db = require('./db');  
@@ -26,14 +25,13 @@ let model;
 
 async function loadModel() {
   try {
-    // Perbaiki path model
+    // In production, use local file path since we're serving it via express static
     const modelPath = process.env.NODE_ENV === 'production'
-      ? path.join(__dirname, 'model', 'model.json')  // Ubah ini
-      : path.join(__dirname, 'model', 'model.json');
+      ? '/model/model.json'  // Changed this line
+      : 'http://localhost:3001/model/model.json';
     
     console.log('Loading model from:', modelPath);
-    
-    model = await tf.loadLayersModel(`file://${modelPath}`);
+    model = await tf.loadLayersModel(modelPath);
     console.log('✅ Model loaded successfully');
     return true;
   } catch (err) {
