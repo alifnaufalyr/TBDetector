@@ -1,6 +1,10 @@
 # Use Node.js 18 with Debian Slim as base
 FROM node:18-slim
 
+# Set TensorFlow environment variables
+ENV TF_CPP_MIN_LOG_LEVEL=2
+ENV TF_ENABLE_ONEDNN_OPTS=0
+
 # Install required dependencies for tfjs-node
 RUN apt-get update && \
     apt-get install -y python3 build-essential && \
