@@ -1,5 +1,6 @@
 const express = require('express');
 const tf = require('@tensorflow/tfjs');
+require('@tensorflow/tfjs-node'); // Tambahkan ini
 const path = require('path');
 const cors = require('cors');
 const db = require('./db');  
@@ -25,14 +26,14 @@ let model;
 
 async function loadModel() {
   try {
-    // Ubah path model untuk production
+    // Perbaiki path model
     const modelPath = process.env.NODE_ENV === 'production'
-      ? 'https://tb-paru-capstone-production.up.railway.app/model/model.json'  // Gunakan full URL
-      : `file://${path.resolve(__dirname, 'model', 'model.json')}`;
+      ? path.join(__dirname, 'model', 'model.json')  // Ubah ini
+      : path.join(__dirname, 'model', 'model.json');
     
     console.log('Loading model from:', modelPath);
     
-    model = await tf.loadLayersModel(modelPath);
+    model = await tf.loadLayersModel(`file://${modelPath}`);
     console.log('✅ Model loaded successfully');
     return true;
   } catch (err) {
@@ -50,31 +51,22 @@ app.post('/predict', async (req, res) => {
   }
 
   try {
-    const { fitur } = req.body; // Mengambil fitur dari request body
+    const { fitur } = req.body;
+    console.log('Received features:', fitur); // Debug log
     
-    // Create tensor and make prediction
     const tensor = tf.tensor2d([fitur]);
     const prediction = model.predict(tensor);
     const result = prediction.dataSync()[0];
     
-    // Cleanup tensors
     tensor.dispose();
     prediction.dispose();
     
-    // Format response sesuai yang diharapkan frontend
     const predictionResult = {
       hasil_prediksi: result > 0.5 ? "Ya" : "Tidak",
       nilai_probabilitas: result
     };
 
-    // Simpan ke database
-    db.run(
-      'INSERT INTO history (input, result) VALUES (?, ?)',
-      [JSON.stringify(fitur), JSON.stringify(predictionResult)],
-      (err) => {
-        if (err) console.error('Database error:', err);
-      }
-    );
+    console.log('Prediction result:', predictionResult); // Debug log
 
     res.json(predictionResult);
   } catch (err) {
