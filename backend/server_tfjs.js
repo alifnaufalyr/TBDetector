@@ -27,8 +27,8 @@ async function loadModel() {
   try {
     // In production, use local file path since we're serving it via express static
     const modelPath = process.env.NODE_ENV === 'production'
-      ? '/model/model.json'  // Changed this line
-      : 'http://localhost:3001/model/model.json';
+      ? '/backend/model/model.json'  // Changed this line
+      : 'http://localhost:3001/backend/model/model.json';
     
     console.log('Loading model from:', modelPath);
     model = await tf.loadLayersModel(modelPath);
