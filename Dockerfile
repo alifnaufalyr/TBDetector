@@ -21,6 +21,9 @@ COPY --from=frontend-builder /frontend/dist ../frontend/dist
 # Copy model files
 COPY backend/model/ ./model/
 
+# Copy database file
+COPY backend/tb_history.db ./tb_history.db
+
 # Ensure model directory exists and has correct permissions
 RUN chmod -R 755 ./model/
 
