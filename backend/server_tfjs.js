@@ -8,18 +8,34 @@ const app = express();
 const port = process.env.PORT || 3001;
 const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
 
+// CORS configuration
 app.use(cors({
-  origin: ['https://tb-paru-capstone-production.up.railway.app', 'http://localhost:5173'],
+  origin: true, // Allow all origins in production
   methods: ['GET', 'POST'],
   credentials: true
 }));
+
 app.use(express.json());
 
-// Serve frontend static files
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
+// Log all requests in production for debugging
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path}`, {
+      headers: req.headers,
+      query: req.query,
+      body: req.body
+    });
+    next();
+  });
+}
 
 // Serve model files
 app.use('/model', express.static(path.join(__dirname, 'model')));
+
+// Serve frontend static files in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+}
 
 let model;
 

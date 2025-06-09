@@ -4,6 +4,10 @@ import { useTBDetection } from '../context/TBDetectionContext';
 import { useNavigate } from 'react-router-dom';
 import { AlertCircle, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 
+// In production when served from the same origin, use relative URL
+const API_URL = import.meta.env.PROD 
+  ? '' // Use relative URL in production
+  : (import.meta.env.VITE_API_URL || 'http://localhost:3001');
 
 const questions = [
   { id: 'CO', question: 'Bagaimana kondisi batuk Anda?', infoText: 'Cough (Batuk)' },
@@ -91,11 +95,10 @@ const calculateResult = async () => {
   setLoading(true);
   const fitur = questions.map(q => mapAnswerToNumber(q.id, answers[q.id]));
   try {
-    const apiUrl = import.meta.env.VITE_API_URL;
-    console.log('API URL:', apiUrl); // Debug
+    console.log('API URL:', API_URL); // Debug
     console.log('Sending data:', { fitur }); // Debug
     
-    const res = await axios.post(`${apiUrl}/predict`, { fitur });
+    const res = await axios.post(`${API_URL}/predict`, { fitur });
     console.log('Response:', res.data); // Debug
     
     if (!res.data || !res.data.hasil_prediksi) {
