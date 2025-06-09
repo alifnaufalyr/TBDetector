@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Microscope, ArrowRight } from 'lucide-react';
+import tbDetectionHero from '../../assets/tb-detection-hero.jpg';
 
 const Hero: React.FC = () => {
   return (
@@ -34,9 +35,9 @@ const Hero: React.FC = () => {
           <div className="lg:w-1/2 relative">
             <div className="relative z-10 bg-white p-4 rounded-2xl shadow-xl">
               <img 
-                src= "/assets/IMG_20250607_171438.jpg"
-                alt="Doctor examining lung x-ray" 
-                className="w-full h-auto rounded-xl"
+                src={tbDetectionHero}
+                alt="Ilustrasi deteksi TB dengan x-ray dan perangkat medis" 
+                className="w-full h-auto rounded-xl object-cover"
               />
               <div className="absolute -bottom-4 -right-4 bg-blue-800 text-white p-4 rounded-lg flex items-center">
                 <Microscope className="mr-2 h-5 w-5" />
