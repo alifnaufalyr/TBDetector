@@ -35,8 +35,8 @@ const Hero: React.FC = () => {
             <div className="relative z-10 bg-white p-4 rounded-2xl shadow-xl">
               <img 
                 src="/tb-detection-hero.jpg"
-                alt="Ilustrasi deteksi TB dengan x-ray" 
-                className="w-full h-auto rounded-xl"
+                alt="Ilustrasi deteksi TB dengan x-ray dan perangkat medis" 
+                className="w-full h-auto rounded-xl object-contain"
               />
               <div className="absolute -bottom-4 -right-4 bg-blue-800 text-white p-4 rounded-lg flex items-center">
                 <Microscope className="mr-2 h-5 w-5" />
