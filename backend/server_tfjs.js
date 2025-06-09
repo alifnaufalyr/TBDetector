@@ -46,16 +46,10 @@ app.post('/predict', async (req, res) => {
   }
 
   try {
-    const input = req.body;
-    const inputArray = [
-      input.CO, input.NS, input.BD, input.FV, 
-      input.CP, input.SP, input.IS, input.LP,
-      input.CH, input.LC, input.IR, input.LA, 
-      input.LE, input.LN, input.SB, input.BMI
-    ];
+    const { fitur } = req.body; // Mengambil fitur dari request body
     
     // Create tensor and make prediction
-    const tensor = tf.tensor2d([inputArray]);
+    const tensor = tf.tensor2d([fitur]);
     const prediction = model.predict(tensor);
     const result = prediction.dataSync()[0];
     
@@ -63,15 +57,16 @@ app.post('/predict', async (req, res) => {
     tensor.dispose();
     prediction.dispose();
     
-    // Simpan hasil prediksi ke database
+    // Format response sesuai yang diharapkan frontend
     const predictionResult = {
-      prediction: result > 0.5 ? "Ya" : "Tidak",
-      probability: result
+      hasil_prediksi: result > 0.5 ? "Ya" : "Tidak",
+      nilai_probabilitas: result
     };
-    
+
+    // Simpan ke database
     db.run(
       'INSERT INTO history (input, result) VALUES (?, ?)',
-      [JSON.stringify(input), JSON.stringify(predictionResult)],
+      [JSON.stringify(fitur), JSON.stringify(predictionResult)],
       (err) => {
         if (err) console.error('Database error:', err);
       }
