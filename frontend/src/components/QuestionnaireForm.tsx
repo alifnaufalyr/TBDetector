@@ -92,10 +92,16 @@ const calculateResult = async () => {
   const fitur = questions.map(q => mapAnswerToNumber(q.id, answers[q.id]));
   try {
     const apiUrl = import.meta.env.VITE_API_URL;
+    console.log('API URL:', apiUrl); // Debug
     console.log('Sending data:', { fitur }); // Debug
+    
     const res = await axios.post(`${apiUrl}/predict`, { fitur });
     console.log('Response:', res.data); // Debug
     
+    if (!res.data || !res.data.hasil_prediksi) {
+      throw new Error('Invalid response format from server');
+    }
+
     const prediction = res.data.hasil_prediksi;
     const probability = res.data.nilai_probabilitas;
 
@@ -119,8 +125,12 @@ const calculateResult = async () => {
     });
     setShowResult(true);
   } catch (err) {
-    console.error('Gagal melakukan prediksi:', err);
-    alert('Terjadi kesalahan saat menghubungkan ke sistem prediksi. Silakan coba lagi.');
+    console.error('Prediction error:', err);
+    if (err instanceof Error) {
+      alert(`Terjadi kesalahan: ${err.message}`);
+    } else {
+      alert('Terjadi kesalahan: Unknown error');
+    }
   } finally {
     setLoading(false);
   }

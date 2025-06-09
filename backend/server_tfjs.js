@@ -8,7 +8,11 @@ const app = express();
 const port = process.env.PORT || 3001;
 const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://tb-paru-capstone-production.up.railway.app', 'http://localhost:5173'],
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Serve frontend static files
@@ -23,7 +27,7 @@ async function loadModel() {
   try {
     // Ubah path model untuk production
     const modelPath = process.env.NODE_ENV === 'production'
-      ? '/model/model.json'  
+      ? 'https://tb-paru-capstone-production.up.railway.app/model/model.json'  // Gunakan full URL
       : `file://${path.resolve(__dirname, 'model', 'model.json')}`;
     
     console.log('Loading model from:', modelPath);
