@@ -42,7 +42,7 @@ TB Detector adalah aplikasi web yang membantu dalam deteksi dini penyakit Tuberk
 
 1. Clone repository
 ```bash
-git clone https://github.com/alifnaufal12/TB-Detector.git
+git clone https://github.com/alifnaufalyr/TB-Detector.git
 cd project-root
 ```
 
