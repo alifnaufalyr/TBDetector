@@ -5,10 +5,12 @@ TB Detector adalah aplikasi web yang membantu dalam deteksi dini penyakit Tuberk
 ## 🌟 Fitur Utama
 
 - Deteksi dini TB melalui kuesioner digital
+- Analisis menggunakan model Machine Learning TensorFlow.js
 - Edukasi tentang penyakit TB
-- Riwayat pemeriksaan
+- Riwayat pemeriksaan pengguna
 - Progressive Web App (PWA) support
 - Responsive design untuk desktop dan mobile
+- Offline capability dengan Service Worker
 
 ## 🛠 Teknologi yang Digunakan
 
@@ -16,26 +18,31 @@ TB Detector adalah aplikasi web yang membantu dalam deteksi dini penyakit Tuberk
 - React + TypeScript
 - Vite
 - Tailwind CSS
-- PWA capabilities
+- PWA capabilities dengan Service Worker
 - Lucide React (untuk icons)
+- ESLint untuk code linting
+- PostCSS untuk CSS processing
 
 ### Backend
 - Node.js
 - Express.js
 - TensorFlow.js
-- SQLite Database
+- SQLite (tb_history.db)
+- Python (untuk training model)
 
 ## 💻 Persyaratan Sistem
 
 - Node.js v16+
 - npm atau yarn
 - Git
+- Python (untuk training model ML)
+- SQLite3
 
 ## 🚀 Cara Menjalankan Aplikasi Secara Lokal
 
 1. Clone repository
 ```bash
-git clone [URL_REPOSITORY]
+git clone https://github.com/alifnaufal12/TB-Detector.git
 cd project-root
 ```
 
@@ -74,11 +81,14 @@ cd frontend
 npm run build
 ```
 
+Hasil build akan tersedia di folder `frontend/dist`
+
 ### Build Backend
+Backend tidak memerlukan proses build karena menggunakan Node.js langsung. Pastikan semua dependencies terinstall:
 
 ```bash
 cd backend
-npm run build
+npm install
 ```
 
 ## 🚂 Deploy ke Railway
@@ -105,29 +115,41 @@ railway up
 
 ### Environment Variables yang Diperlukan
 
-Buat file `.env` di root folder dengan variabel berikut:
+Untuk deployment ke Railway, variable environment akan dikonfigurasi melalui dashboard Railway. Variable yang diperlukan:
 
 ```env
 PORT=3000
 NODE_ENV=production
-DATABASE_URL=your_database_url
 ```
+
+Catatan: Database SQLite digunakan secara lokal dalam aplikasi, sehingga tidak memerlukan DATABASE_URL.
 
 ## 📁 Struktur Project
 
 ```
 project-root/
-├── frontend/           # React + TypeScript frontend
+├── frontend/                # React + TypeScript frontend
 │   ├── src/           
-│   │   ├── components/ # Reusable components
-│   │   ├── pages/     # Application pages
-│   │   ├── context/   # React context
-│   │   └── types/     # TypeScript type definitions
-│   └── public/        # Static assets
-├── backend/           # Node.js backend
-│   ├── model/        # ML model files
-│   └── server_tfjs.js # Main server file
-└── docker-compose.yml # Docker compose configuration
+│   │   ├── assets/         # Static assets used in components
+│   │   ├── components/     # Reusable components (Hero, Header, etc.)
+│   │   ├── pages/         # Application pages (Home, Detection, etc.)
+│   │   ├── context/       # React context (TBDetectionContext)
+│   │   └── types/         # TypeScript type definitions
+│   ├── public/            # Public assets
+│   │   ├── images/        # Image assets
+│   │   ├── manifest.json  # PWA manifest
+│   │   └── sw.js         # Service Worker for PWA
+│   └── icons/            # App icons for PWA
+├── backend/              # Node.js backend
+│   ├── model/           # TensorFlow.js model files
+│   │   ├── model.json   # Model architecture
+│   │   └── group1-shard1of1.bin  # Model weights
+│   ├── server_tfjs.js   # Main server file
+│   └── tb_history.db    # SQLite database
+├── docker-compose.yml   # Docker configuration
+├── Dockerfile           # Docker build instructions
+├── vercel.json         # Vercel deployment config
+└── railway.toml        # Railway deployment config
 ```
 
 ## 🤝 Kontribusi
@@ -144,13 +166,17 @@ project-root/
 
 ## 👥 Tim Pengembang
 
-- Developer - [Nama Anda]
-- Supervisor - [Nama Supervisor]
+ID Team: CC25-CF003
+- **MC190D5X0505** - Mega Gloria - Universitas - [Aktif]
+- **MC190D5Y2117** - Muhammad Alif Naufaly Ramadhan - Universitas - [Aktif]
+- **MC190D5Y2222** - Rafie Mahesa Pandu - Universitas - [Aktif]
+- **FC190D5X1633** - Augia Zifa Nafilah - Universitas - [Aktif]
+- **FC190D5X2387** - Noumy Fadmayla Jasmine - Universitas - [Aktif]
 
 ## 📞 Kontak
 
 Jika Anda memiliki pertanyaan atau masukan, silakan hubungi kami melalui:
-- Email: [your.email@example.com]
+- Email: [medinovaubj@gmail.com]
 - GitHub Issues
 
 ## ⚠️ Penting
