@@ -1,5 +1,12 @@
 {
- "rewrites": [
-  { "source": "/(.*)", "destination": "/" }
- ]
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ],
+  "routes": [
+    {
+      "src": "/images/(.*)",
+      "dest": "/images/$1",
+      "headers": { "cache-control": "public, max-age=31536000, immutable" }
+    }
+  ]
 }

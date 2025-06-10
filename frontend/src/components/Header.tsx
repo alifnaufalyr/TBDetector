@@ -86,13 +86,6 @@ const Header: React.FC = () => {
               Edukasi
             </Link>
             <Link 
-              to="/facilities" 
-              className={`font-medium p-2 rounded ${isActive('/facilities') ? 'bg-blue-50 text-blue-800' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-800'}`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Faskes Rujukan
-            </Link>
-            <Link 
               to="/history" 
               className={`font-medium p-2 rounded ${isActive('/history') ? 'bg-blue-50 text-blue-800' : 'text-gray-600 hover:bg-blue-50 hover:text-blue-800'}`}
               onClick={() => setIsMenuOpen(false)}
